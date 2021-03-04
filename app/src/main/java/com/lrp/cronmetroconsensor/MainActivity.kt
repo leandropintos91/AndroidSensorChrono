@@ -6,10 +6,8 @@ import android.hardware.Sensor.TYPE_PROXIMITY
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import android.widget.Chronometer
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -88,10 +86,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener, ChronometerHolder
 
     override fun onChronometerStarted() {
         startStop.setImageDrawable(resources.getDrawable(R.drawable.ic_stop, resources.newTheme()))
+        startStop.contentDescription = resources.getString(R.string.stop_button_description)
     }
 
     override fun onChronometerStopped() {
         startStop.setImageDrawable(resources.getDrawable(R.drawable.ic_start, resources.newTheme()))
+        startStop.contentDescription = resources.getString(R.string.start_button_description)
     }
 
     override fun onChronometerPaused() {
