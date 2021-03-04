@@ -8,12 +8,13 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.Chronometer
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity(), SensorEventListener {
+class MainActivity : AppCompatActivity(), SensorEventListener, ChronometerHolder {
 
     lateinit var chronometer: com.lrp.cronmetroconsensor.Chronometer
     lateinit var chronometerView : Chronometer
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         setupViews()
         setupChronometer()
         setupSensor()
+
     }
 
     private fun setupSensor() {
@@ -52,7 +54,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 
     private fun setupChronometer() {
-        chronometer = Chronometer(chronometerView)
+        chronometer = Chronometer(chronometerView, this)
     }
 
     private fun setupViews() {
@@ -73,8 +75,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         event!!
         if (event.sensor.getType() == TYPE_PROXIMITY) {
             if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY) {
+                //near
                 chronometer.pause()
             } else {
+                //far
+                startButton.isEnabled = true
+                stopButton.isEnabled = true
                 chronometer.resume()
             }
         }
@@ -82,6 +88,27 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
 
+    }
+
+    override fun onChronometerStarted() {
+
+    }
+
+    override fun onChronometerStopped() {
+
+    }
+
+    override fun onChronometerPaused() {
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        startButton.isEnabled = false
+        stopButton.isEnabled = false
+    }
+
+    override fun onChronometerResumed() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        startButton.isEnabled = true
+        stopButton.isEnabled = true
     }
 
 

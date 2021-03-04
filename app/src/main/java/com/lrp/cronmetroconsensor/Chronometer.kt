@@ -3,7 +3,7 @@ package com.lrp.cronmetroconsensor
 import android.os.SystemClock
 import android.widget.Chronometer
 
-class Chronometer(private val chronometerView : Chronometer) {
+class Chronometer(private val chronometerView : Chronometer, val holder : ChronometerHolder) {
 
     var status = ChronometerStatus.STOPPED
     var lastElapsedTime : Long = 0
@@ -14,6 +14,7 @@ class Chronometer(private val chronometerView : Chronometer) {
             lastElapsedTime = 0
             chronometerView.start()
             status = ChronometerStatus.STARTED
+            holder.onChronometerStarted()
         }
     }
 
@@ -22,6 +23,7 @@ class Chronometer(private val chronometerView : Chronometer) {
         chronometerView.base = SystemClock.elapsedRealtime()
         lastElapsedTime = 0
         status = ChronometerStatus.STOPPED
+        holder.onChronometerStopped()
     }
 
     fun pause() {
@@ -29,6 +31,7 @@ class Chronometer(private val chronometerView : Chronometer) {
             lastElapsedTime = SystemClock.elapsedRealtime() - chronometerView.base
             chronometerView.stop()
             status = ChronometerStatus.PAUSED
+            holder.onChronometerPaused()
         }
     }
 
@@ -37,6 +40,7 @@ class Chronometer(private val chronometerView : Chronometer) {
             chronometerView.base = SystemClock.elapsedRealtime() - lastElapsedTime
             chronometerView.start()
             status = ChronometerStatus.STARTED
+            holder.onChronometerResumed()
         }
     }
 
@@ -46,4 +50,16 @@ enum class ChronometerStatus {
     STOPPED,
     STARTED,
     PAUSED
+}
+
+interface ChronometerHolder {
+
+    fun onChronometerStarted()
+
+    fun onChronometerStopped()
+
+    fun onChronometerPaused()
+
+    fun onChronometerResumed()
+
 }

@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="150dp"
         android:layout_marginHorizontal="16dp"
-        android:textSize="48sp" />
+        android:textSize="70sp" />
 
     <Button
         android:id="@+id/start_button"
