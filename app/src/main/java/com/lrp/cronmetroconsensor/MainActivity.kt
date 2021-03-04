@@ -6,7 +6,9 @@ import android.hardware.Sensor.TYPE_PROXIMITY
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
 import android.widget.Chronometer
 import android.widget.ImageButton
@@ -93,15 +95,32 @@ class MainActivity : AppCompatActivity(), SensorEventListener, ChronometerHolder
     }
 
     override fun onChronometerPaused() {
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        hideSystemUI()
         startStop.isEnabled = false
     }
 
     override fun onChronometerResumed() {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        showSystemUI()
         startStop.isEnabled = true
     }
+
+
+    //TODO fix this deprecated stuff
+    private fun hideSystemUI() {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
+
+    private fun showSystemUI() {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+    }
+
 
 
 }
