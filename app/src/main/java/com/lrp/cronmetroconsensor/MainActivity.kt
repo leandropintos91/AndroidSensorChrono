@@ -7,19 +7,16 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.Chronometer
-import android.widget.Toast
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity(), SensorEventListener, ChronometerHolder {
 
     lateinit var chronometer: com.lrp.cronmetroconsensor.Chronometer
     lateinit var chronometerView : Chronometer
-    lateinit var startButton : Button
-    lateinit var stopButton : Button
+    lateinit var startStop : ImageButton
 
     private lateinit var sensorManager: SensorManager
     lateinit var proximitySensor: Sensor
@@ -59,15 +56,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener, ChronometerHolder
 
     private fun setupViews() {
         chronometerView = findViewById(R.id.chronometer_view)
-        startButton = findViewById(R.id.start_button)
-        stopButton = findViewById(R.id.stop_button)
+        startStop = findViewById(R.id.start_stop_button)
 
-        startButton.setOnClickListener {
-            chronometer.start()
-        }
-
-        stopButton.setOnClickListener {
-            chronometer.stop()
+        startStop.setOnClickListener {
+            if (chronometer.status != ChronometerStatus.STOPPED) {
+                chronometer.stop()
+            } else {
+                chronometer.start()
+            }
         }
     }
 
@@ -79,8 +75,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, ChronometerHolder
                 chronometer.pause()
             } else {
                 //far
-                startButton.isEnabled = true
-                stopButton.isEnabled = true
                 chronometer.resume()
             }
         }
@@ -91,24 +85,22 @@ class MainActivity : AppCompatActivity(), SensorEventListener, ChronometerHolder
     }
 
     override fun onChronometerStarted() {
-
+        startStop.setImageDrawable(resources.getDrawable(R.drawable.ic_stop, resources.newTheme()))
     }
 
     override fun onChronometerStopped() {
-
+        startStop.setImageDrawable(resources.getDrawable(R.drawable.ic_start, resources.newTheme()))
     }
 
     override fun onChronometerPaused() {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        startButton.isEnabled = false
-        stopButton.isEnabled = false
+        startStop.isEnabled = false
     }
 
     override fun onChronometerResumed() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        startButton.isEnabled = true
-        stopButton.isEnabled = true
+        startStop.isEnabled = true
     }
 
 
