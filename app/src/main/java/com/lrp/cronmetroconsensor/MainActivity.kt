@@ -1,17 +1,30 @@
 package com.lrp.cronmetroconsensor
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.Sensor.TYPE_PROXIMITY
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.SystemClock
 import android.widget.Button
 import android.widget.Chronometer
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SensorEventListener {
 
+    lateinit var chronometer: com.lrp.cronmetroconsensor.Chronometer
     lateinit var chronometerView : Chronometer
     lateinit var startButton : Button
     lateinit var stopButton : Button
-    lateinit var resetButton : Button
+
+    private lateinit var sensorManager: SensorManager
+    lateinit var proximitySensor: Sensor
+
+    private val SENSOR_SENSITIVITY = 4
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,28 +32,56 @@ class MainActivity : AppCompatActivity() {
 
         setupViews()
         setupChronometer()
+        setupSensor()
     }
 
+    private fun setupSensor() {
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        proximitySensor = sensorManager.getDefaultSensor(TYPE_PROXIMITY)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(this)
+    }
+
+
     private fun setupChronometer() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            chronometerView.isCountDown = false
-        }
+        chronometer = Chronometer(chronometerView)
     }
 
     private fun setupViews() {
         chronometerView = findViewById(R.id.chronometer_view)
         startButton = findViewById(R.id.start_button)
         stopButton = findViewById(R.id.stop_button)
-        resetButton = findViewById(R.id.reset_button)
 
         startButton.setOnClickListener {
-            chronometerView.base = SystemClock.elapsedRealtime()
-            chronometerView.start()
+            chronometer.start()
         }
 
         stopButton.setOnClickListener {
-            chronometerView.stop()
+            chronometer.stop()
         }
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        event!!
+        if (event.sensor.getType() == TYPE_PROXIMITY) {
+            if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY) {
+                chronometer.pause()
+            } else {
+                chronometer.resume()
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+
     }
 
 

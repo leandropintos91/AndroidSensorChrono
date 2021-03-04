@@ -9,13 +9,13 @@
     <Chronometer
         android:id="@+id/chronometer_view"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="150dp"
         android:layout_marginHorizontal="16dp"
-        android:textSize="24sp" />
+        android:textSize="48sp" />
 
     <Button
         android:id="@+id/start_button"
@@ -28,6 +28,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
         android:text="@string/start"/>
 
     <Button
@@ -41,14 +42,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginTop="32dp"
         android:text="@string/stop"/>
-
-    <Button
-        android:id="@+id/reset_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/start_button"
-        app:layout_constraintTop_toBottomOf="@id/start_button"
-        android:text="@string/reset"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
